@@ -21,6 +21,7 @@ defmodule Mandate.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:spark, "~> 2.2"},
       {:igniter, "~> 0.5", only: [:dev, :test]}
     ]
   end
