@@ -29,17 +29,17 @@ defmodule Mandate.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:ex_doc, "~> 0.37", only: :dev, runtime: false},
+      {:igniter, "~> 0.5", only: [:dev, :test]},
       {:sourceror, "~> 1.7", only: [:dev, :test]},
-      {:spark, "~> 2.2"},
-      {:igniter, "~> 0.5", only: [:dev, :test]}
+      {:spark, "~> 2.2"}
     ]
   end
 
   defp package() do
     [
       # These are the default files included in the package
-      files: ~w(lib priv .formatter.exs mix.exs README* readme* LICENSE*
-                  license* CHANGELOG* changelog* src),
+      files: ~w(lib .formatter.exs mix.exs README* LICENSE* CHANGELOG*),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/minibikini/mandate"}
     ]
