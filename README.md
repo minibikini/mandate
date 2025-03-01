@@ -13,3 +13,9 @@ def deps do
   ]
 end
 ```
+
+## License
+
+MIT License
+
+Copyright (c) 2025 Egor Kislitsyn
