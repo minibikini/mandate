@@ -1,6 +1,6 @@
 # Mandate
 
-[![CI Status](https://github.com/minibikini/mandate/workflows/ci.yml/badge.svg)](https://github.com/minibikini/mandate/actions/workflows/ci.yml)
+[![CI Status](https://github.com/minibikini/mandate/actions/workflows/ci.yml/badge.svg)](https://github.com/minibikini/mandate/actions/workflows/ci.yml)
 [![Hex.pm](https://img.shields.io/hexpm/v/mandate.svg?maxAge=2592000)](https://hex.pm/packages/mandate)
 [![Hex.pm](https://img.shields.io/hexpm/l/mandate.svg?maxAge=2592000)](https://hex.pm/packages/mandate)
 
