@@ -2,62 +2,40 @@ defmodule Mix.Tasks.Mandate.Gen.MixTaskTest do
   use ExUnit.Case, async: true
   alias Mix.Tasks.Mandate.Gen.MixTask
 
+  @task_name "mandate.gen.mix_task"
+
   test "inject @shortdoc" do
     attributes = MixTask.__info__(:attributes)
 
     assert ["Generates a new Mix Task"] = Keyword.get(attributes, :shortdoc)
   end
 
-  # test "inject @moduledoc" do
-  #   attributes = MixTask.__info__(:attributes)
+  test "inject @moduledoc" do
+    attributes = MixTask.__info__(:attributes)
 
-  #   assert ["Generates a new Mix Task"] = Keyword.get(attributes, :moduledoc)
-  # end
+    assert [{1, text} | _] = Keyword.get(attributes, :moduledoc)
+    assert text =~ "accepts arguments"
+  end
 
-  # test "mandate.gen.mix_task" do
-  #   args = []
+  describe "mix task run" do
+    setup do
+      Mix.Task.reenable(@task_name)
+    end
 
-  #   Mix.Task.run("mandate.gen.mix_task", args)
-  # end
+    test "xxxx" do
+      msg = "Too many arguments. Expected maximum 1 but got 4."
 
-  # describe "run/1" do
-  #   setup context do
-  #     Gen.run(context[:argv])
+      assert_raise RuntimeError, msg, fn ->
+        Mix.Task.run(@task_name, ["one", "s", "sdds", "sds"])
+      end
+    end
 
-  #     Mix.Task.run("mandate.gen.mix_task", context[:argv])
+    test "Required arguments presence." do
+      msg = "Wrong number of required arguments. Expected 1 but got 0."
 
-  #     assert_received {:mix_shell, :info, [jwt]}
-
-  #     # token = Cerebro.Jwt.verify_jwt(jwt)
-
-  #     {:ok, claims: token.claims, token: token}
-  #     {:ok, claims: token.claims, token: token}
-  #   end
-
-  #   @tag argv: []
-  #   test "prints a valid JWT with no args", %{token: token} do
-  #     jwt
-  #     refute token.error
-  #   end
-
-  # @tag argv: ["--exp", "123"]
-  # test "prints a valid JWT when passed an expiration", %{claims: claims} do
-  #   assert_in_delta claims["exp"], Joken.current_time(), 124
-  # end
-
-  # @tag argv: ["--jti", "fdsa"]
-  # test "prints a valid JWT when passed a jti", %{claims: claims} do
-  #   assert claims["jti"] == "fdsa"
-  # end
-
-  # @tag argv: ["--iss", "logan"]
-  # test "prints a valid JWT when passed an iss", %{claims: claims} do
-  #   assert claims["iss"] == "logan"
-  # end
-
-  # @tag argv: ["--token", "asdf"]
-  # test "prints a valid JWT when passed a token", %{claims: claims} do
-  #   assert claims["token"] == "asdf"
-  # end
-  # end
+      assert_raise RuntimeError, msg, fn ->
+        Mix.Task.run(@task_name, [])
+      end
+    end
+  end
 end

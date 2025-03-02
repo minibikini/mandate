@@ -11,7 +11,9 @@ defmodule Mandate.Verifiers.VerifyRequired do
   end
 
   defp verify_run(dsl_state) do
-    if Enum.any?(get_entities(dsl_state), &is_struct(&1, Mandate.Dsl.Run)) do
+    entities = get_entities(dsl_state)
+
+    if Enum.any?(entities, &is_struct(&1, Mandate.Dsl.Run)) do
       :ok
     else
       message = """
@@ -20,15 +22,20 @@ defmodule Mandate.Verifiers.VerifyRequired do
           run fn args ->
             IO.puts("Running my task  with: \#{inspect(args)}"
           end
+
       """
 
-      {:error,
-       DslError.exception(
-         message: message,
-         module: Spark.Dsl.Verifier.get_persisted(dsl_state, :module),
-         path: [:root, :entities, :run]
-       )}
+      build_error(dsl_state, message, [:root, :entities, :run])
     end
+  end
+
+  defp build_error(state, message, path) do
+    {:error,
+     DslError.exception(
+       message: message,
+       module: Spark.Dsl.Verifier.get_persisted(state, :module),
+       path: path
+     )}
   end
 
   defp get_entities(dsl_state) do

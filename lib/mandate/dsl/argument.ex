@@ -21,6 +21,9 @@ defmodule Mandate.Dsl.Argument do
           type: :boolean,
           default: true
         ],
+        example: [
+          type: :string
+        ],
         doc: [
           type: :string
         ]
