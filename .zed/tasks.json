@@ -1,0 +1,7 @@
+[
+  {
+    "label": "mix mandate.gen.mix_task",
+    "command": "mix",
+    "args": ["mandate.gen.mix_task"]
+  }
+]
