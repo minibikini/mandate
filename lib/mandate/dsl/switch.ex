@@ -1,4 +1,5 @@
 defmodule Mandate.Dsl.Switch do
+  @moduledoc false
   defstruct [:name, :type, :required, :short, :doc]
 
   @doc false

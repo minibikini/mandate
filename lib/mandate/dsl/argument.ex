@@ -1,4 +1,5 @@
 defmodule Mandate.Dsl.Argument do
+  @moduledoc false
   defstruct [:name, :type, :required, :doc]
   @doc false
   def __entity__,

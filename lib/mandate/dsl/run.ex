@@ -1,4 +1,5 @@
 defmodule Mandate.Dsl.Run do
+  @moduledoc false
   defstruct [:fun]
 
   @doc false

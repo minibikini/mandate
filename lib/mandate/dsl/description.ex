@@ -1,4 +1,5 @@
 defmodule Mandate.Dsl.Description do
+  @moduledoc false
   defstruct [:description]
 
   @doc false

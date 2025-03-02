@@ -1,4 +1,5 @@
 defmodule Mandate.Dsl do
+  @moduledoc false
   @root %Spark.Dsl.Section{
     name: :root,
     schema: [

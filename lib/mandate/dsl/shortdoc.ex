@@ -1,4 +1,5 @@
 defmodule Mandate.Dsl.Shortdoc do
+  @moduledoc false
   defstruct [:shortdoc]
 
   @doc false

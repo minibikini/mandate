@@ -1,4 +1,5 @@
 defmodule Mandate.Verifiers.VerifyRequired do
+  @moduledoc false
   use Spark.Dsl.Verifier
 
   alias Spark.Error.DslError

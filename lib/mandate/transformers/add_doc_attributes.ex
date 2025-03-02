@@ -1,4 +1,5 @@
 defmodule Mandate.Transformers.AddDocAttributes do
+  @moduledoc false
   use Spark.Dsl.Transformer
 
   def transform(dsl_state) do
