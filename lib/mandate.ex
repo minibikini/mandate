@@ -21,19 +21,22 @@ defmodule Mandate do
     end
   end
 
+  def get(module, :shortdoc) do
+    module
+    |> Mandate.Info.root()
+    |> Enum.find(&is_struct(&1, Mandate.Dsl.Shortdoc))
+  end
+
   defp mix_task() do
     quote do
       use Mix.Task
-      # @moduledoc "Printed when the user requests `mix help echo`"
-      # @shortdoc "Echoes arguments"
-      # @persist {:simple_notifiers, unquote(opts[:simple_notifiers])}
-      # @requirements ["app.config"]
-      # @preferred_cli_env :test
 
       @impl Mix.Task
       def run(argv) do
-        Mandate.Info.root(__MODULE__)
-        |> IO.inspect()
+        __MODULE__
+        |> Mandate.Info.root()
+        |> Enum.find(&is_struct(&1, Mandate.Dsl.Run))
+        |> then(fn run -> apply(run.fun, [argv]) end)
       end
     end
   end
