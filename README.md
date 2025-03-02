@@ -1,5 +1,9 @@
 # Mandate
 
+[![Actions Status](https://github.com/minibikini/mandate/workflows/CI/badge.svg)](https://github.com/minibikini/mandate/actions)
+[![Hex.pm](https://img.shields.io/hexpm/v/mandate.svg?maxAge=2592000)](https://hex.pm/packages/mandate)
+[![Hex.pm](https://img.shields.io/hexpm/l/mandate.svg?maxAge=2592000)](https://hex.pm/packages/mandate)
+
 Build robust, elegant CLIs with minimal boilerplate.
 
 ## Installation
