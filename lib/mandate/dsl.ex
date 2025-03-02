@@ -11,6 +11,7 @@ defmodule Mandate.Dsl do
     entities: [
       Mandate.Dsl.Argument.__entity__(),
       Mandate.Dsl.Description.__entity__(),
+      Mandate.Dsl.Longdoc.__entity__(),
       Mandate.Dsl.Run.__entity__(),
       Mandate.Dsl.Shortdoc.__entity__(),
       Mandate.Dsl.Switch.__entity__()
