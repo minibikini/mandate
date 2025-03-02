@@ -7,7 +7,7 @@ defmodule Mandate.MixProject do
       description: description(),
       package: package(),
       app: :mandate,
-      version: "0.1.0",
+      version: "0.2.1",
       elixir: "~> 1.18",
       source_url: "https://github.com/minibikini/mandate",
       start_permanent: Mix.env() == :prod,
