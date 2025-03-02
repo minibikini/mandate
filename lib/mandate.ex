@@ -21,13 +21,7 @@ defmodule Mandate do
     end
   end
 
-  def get(module, :shortdoc) do
-    module
-    |> Mandate.Info.root()
-    |> Enum.find(&is_struct(&1, Mandate.Dsl.Shortdoc))
-  end
-
-  defp mix_task() do
+  defp mix_task do
     quote do
       use Mix.Task
 

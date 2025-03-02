@@ -10,6 +10,5 @@ defmodule Mix.Tasks.Mandate.Gen.MixTask do
 
   run fn args ->
     IO.puts("Running my_task  with: #{inspect(args)}")
-    args
   end
 end
