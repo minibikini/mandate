@@ -3,6 +3,7 @@
 [![Mandate CI Status](https://github.com/minibikini/mandate/actions/workflows/elixir.yml/badge.svg)](https://github.com/minibikini/mandate/actions/workflows/elixir.yml)
 [![Hex.pm](https://img.shields.io/hexpm/v/mandate.svg?maxAge=2592000)](https://hex.pm/packages/mandate)
 [![Hex.pm](https://img.shields.io/hexpm/l/mandate.svg?maxAge=2592000)](https://hex.pm/packages/mandate)
+[![Hexdocs.pm](https://img.shields.io/badge/docs-hexdocs-purple)](https://hexdocs.pm/mandate)
 
 Build robust, elegant CLIs with minimal boilerplate.
 
