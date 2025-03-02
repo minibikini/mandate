@@ -20,7 +20,6 @@ defmodule Mandate.Transformers.AddDocAttributes do
     dsl_state =
       %{moduledoc: {1, longdoc}, shortdoc: shortdoc}
       |> Map.reject(fn {_k, v} -> is_nil(v) end)
-      |> dbg()
       |> Enum.reduce(dsl_state, fn {key, value}, dsl_state ->
         Spark.Dsl.Transformer.eval(
           dsl_state,
