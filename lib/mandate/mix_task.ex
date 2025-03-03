@@ -6,16 +6,22 @@ defmodule Mandate.MixTask do
       @impl Mix.Task
       def run(argv) do
         root = Mandate.Info.root(__MODULE__)
-        argv = Mandate.MixTask.parse_argv!(root, argv)
 
-        root
-        |> Enum.find(&is_struct(&1, Mandate.Dsl.Run))
-        |> then(fn run -> apply(run.fun, [argv]) end)
+        case Mandate.MixTask.parse_argv(root, argv) do
+          {:ok, parsed} -> Mandate.MixTask.run(root, parsed)
+          {:error, err} -> Mix.shell().error(err)
+        end
       end
     end
   end
 
-  def parse_argv!(root, argv) do
+  def run(root, parsed_argv) do
+    root
+    |> Enum.find(&is_struct(&1, Mandate.Dsl.Run))
+    |> then(fn run -> apply(run.fun, [parsed_argv]) end)
+  end
+
+  def parse_argv(root, argv) do
     {_switches, pos_args, _err} =
       OptionParser.parse(argv, strict: [debug: :boolean])
 
@@ -38,8 +44,6 @@ defmodule Mandate.MixTask do
           nil
       end
 
-    if is_binary(error_message), do: raise(error_message)
-
-    pos_args
+    if is_binary(error_message), do: {:error, error_message}, else: {:ok, pos_args}
   end
 end
