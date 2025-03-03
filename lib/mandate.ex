@@ -16,35 +16,8 @@ defmodule Mandate do
   @impl Spark.Dsl
   def handle_opts(opts) do
     case Keyword.get(opts, :as) do
-      :mix_task -> mix_task()
+      :mix_task -> Mandate.MixTask.init()
       _ -> quote(do: nil)
     end
-  end
-
-  defp mix_task do
-    quote do
-      use Mix.Task
-
-      @impl Mix.Task
-      def run(argv) do
-        __MODULE__
-        |> Mandate.Info.root()
-        |> Enum.find(&is_struct(&1, Mandate.Dsl.Run))
-        |> then(fn run -> apply(run.fun, [argv]) end)
-      end
-    end
-  end
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Mandate.hello()
-      :world
-
-  """
-  def hello do
-    :world
   end
 end
