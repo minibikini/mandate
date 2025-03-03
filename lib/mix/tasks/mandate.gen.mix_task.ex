@@ -16,6 +16,6 @@ defmodule Mix.Tasks.Mandate.Gen.MixTask do
 
   run fn args ->
     name = Mix.Task.task_name(__MODULE__)
-    IO.puts("Running `#{name}` with: #{inspect(args)}")
+    Mix.shell().info("Running `#{name}` with: #{inspect(args)}")
   end
 end

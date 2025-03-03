@@ -35,7 +35,7 @@ defmodule Mix.Tasks.Mandate.Gen.MixTaskTest do
           Mix.Task.run(@task_name, ["one", "s", "sdds", "sds"])
         end)
 
-      assert output =~ "Too many arguments. Expected maximum 1 but got 4."
+      assert output =~ "Too many arguments. Expected maximum 2 but got 4."
     end
 
     test "Required arguments presence." do
@@ -44,7 +44,7 @@ defmodule Mix.Tasks.Mandate.Gen.MixTaskTest do
           Mix.Task.run(@task_name, [])
         end)
 
-      assert output =~ "Wrong number of required arguments. Expected 1 but got 0."
+      assert output =~ "Wrong number of required arguments. Expected 2 but got 0."
     end
   end
 end

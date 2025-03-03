@@ -25,20 +25,20 @@ defmodule Mandate.MixTask do
     {_switches, pos_args, _err} =
       OptionParser.parse(argv, strict: [debug: :boolean])
 
-    fields = Enum.filter(root, &is_struct(&1, Mandate.Dsl.Argument))
-    fields_required = Enum.filter(fields, & &1.required)
+    pos_args_shema = Enum.filter(root, &is_struct(&1, Mandate.Dsl.Argument))
+    pos_args_shema_required = Enum.filter(pos_args_shema, & &1.required)
 
     pos_args_len = length(pos_args)
-    fields_len = length(fields)
-    fields_required_len = length(fields_required)
+    pos_args_schema_len = length(pos_args_shema)
+    pos_args_shema_required_len = length(pos_args_shema_required)
 
     error_message =
       cond do
-        fields_required_len > pos_args_len ->
-          "Wrong number of required arguments. Expected #{fields_required_len} but got #{pos_args_len}."
+        pos_args_shema_required_len > pos_args_len ->
+          "Wrong number of required arguments. Expected #{pos_args_shema_required_len} but got #{pos_args_len}."
 
-        fields_len < pos_args_len ->
-          "Too many arguments. Expected maximum #{fields_len} but got #{pos_args_len}."
+        pos_args_schema_len < pos_args_len ->
+          "Too many arguments. Expected maximum #{pos_args_schema_len} but got #{pos_args_len}."
 
         true ->
           nil
