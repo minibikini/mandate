@@ -30,8 +30,8 @@ defmodule Mandate.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.37", only: :dev, runtime: false},
-      {:igniter, "~> 0.5", only: [:dev, :test]},
-      {:sourceror, "~> 1.7", only: [:dev, :test]},
+      {:igniter, "~> 0.5"},
+      {:sourceror, "~> 1.7"},
       {:spark, "~> 2.2"}
     ]
   end
