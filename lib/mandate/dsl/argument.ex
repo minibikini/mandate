@@ -19,7 +19,7 @@ defmodule Mandate.Dsl.Argument do
         ],
         required: [
           type: :boolean,
-          default: true
+          default: false
         ],
         example: [
           doc: "Example value for the argument"

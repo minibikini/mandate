@@ -24,8 +24,8 @@ defmodule Mandate.MixTask do
   def parse_argv(root, argv) do
     parsed_argv = OptionParser.parse(argv, parse_opts(root))
 
-    with {:ok, switches} <- validate_switches(parsed_argv),
-         {:ok, pos_args} <- validate_pos_args(root, parsed_argv) do
+    with {:ok, pos_args} <- validate_pos_args(root, parsed_argv),
+         {:ok, switches} <- validate_switches(parsed_argv) do
       {:ok, pos_args ++ switches}
     end
   end
