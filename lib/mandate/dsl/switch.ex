@@ -16,11 +16,11 @@ defmodule Mandate.Dsl.Switch do
         ],
         type: [
           type: :atom,
-          required: true
+          default: :boolean
         ],
         default: [],
         short: [
-          type: :string
+          type: :atom
         ],
         required: [
           type: :boolean,
