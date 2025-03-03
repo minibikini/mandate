@@ -20,17 +20,4 @@ defmodule Mandate do
       _ -> quote(do: nil)
     end
   end
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Mandate.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
 end
