@@ -9,7 +9,13 @@ defmodule Mix.Tasks.Mandate.Gen.MixTask do
     required true
   end
 
+  argument :my_number, :integer do
+    doc "Any number"
+    example 42
+  end
+
   run fn args ->
-    IO.puts("Running my_task  with: #{inspect(args)}")
+    name = Mix.Task.task_name(__MODULE__)
+    IO.puts("Running `#{name}` with: #{inspect(args)}")
   end
 end

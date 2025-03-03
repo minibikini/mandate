@@ -22,7 +22,7 @@ defmodule Mandate.Dsl.Argument do
           default: true
         ],
         example: [
-          type: :string
+          doc: "Example value for the argument"
         ],
         doc: [
           type: :string
