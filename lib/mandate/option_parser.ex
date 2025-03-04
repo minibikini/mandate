@@ -8,9 +8,29 @@ defmodule Mandate.OptionParser do
     parsed_argv = OptionParser.parse(argv, section_to_parse_opts(root))
 
     with {:ok, pos_args} <- validate_pos_args(root, parsed_argv),
-         {:ok, switches} <- validate_switches(parsed_argv) do
+         {:ok, switches} <- validate_switches(parsed_argv),
+         {:ok, switches} <- set_switch_defaults(switches, root) do
       {:ok, pos_args ++ switches}
     end
+  end
+
+  defp set_switch_defaults(switches, root) do
+    switches =
+      root
+      |> switch_schemas()
+      |> Enum.reduce(switches, fn schema, switches ->
+        if Keyword.has_key?(switches, schema.name) do
+          switches
+        else
+          case schema do
+            %{type: :boolean, default: nil} -> [{schema.name, false} | switches]
+            %{default: nil} -> switches
+            %{default: value} -> [{schema.name, value} | switches]
+          end
+        end
+      end)
+
+    {:ok, switches}
   end
 
   defp validate_switches({switches, _pos_args, []}), do: {:ok, switches}
@@ -51,9 +71,13 @@ defmodule Mandate.OptionParser do
   defp validate_pos_args_len(pos_args_len, max),
     do: {:error, "Too many arguments. Expected maximum #{max} but got #{pos_args_len}."}
 
+  defp switch_schemas(root) do
+    Enum.filter(root, &is_struct(&1, Switch))
+  end
+
   defp section_to_parse_opts(root) do
     root
-    |> Enum.filter(&is_struct(&1, Switch))
+    |> switch_schemas()
     |> Enum.reduce([aliases: [], strict: []], &switch_to_parse_opts/2)
   end
 
