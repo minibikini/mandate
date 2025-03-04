@@ -9,7 +9,7 @@ defmodule Mandate do
     ],
     opt_schema: [
       as: [
-        type: {:one_of, [:mix_task]}
+        type: {:one_of, [:mix_task, :igniter_task]}
       ]
     ]
 
@@ -17,6 +17,7 @@ defmodule Mandate do
   def handle_opts(opts) do
     case Keyword.get(opts, :as) do
       :mix_task -> Mandate.MixTask.init()
+      :igniter_task -> Mandate.IgniterMixTask.init()
       _ -> quote(do: nil)
     end
   end

@@ -2,26 +2,41 @@ defmodule Mandate.Dsl do
   @moduledoc false
   @root %Spark.Dsl.Section{
     name: :root,
+    describe: "The root section",
+    top_level?: true,
     schema: [
-      required: [
-        type: {:list, :atom},
-        doc: "The fields that must be provided for validation to succeed"
+      run: [
+        # type: {:one_of, [{:fun, 1}, {:fun, 2}]},
+        type: {:fun, 2},
+        required: true,
+        doc: """
+        The function that will be called when the command/task is run. The function should accept a single argument, a keyword list of the parsed arguments and switches.
+
+        Igniter tasks also accept a second argument, the Igniter context.
+        """,
+        snippet: """
+        fn args ->
+
+        end
+        """
+      ],
+      shortdoc: [
+        type: :string,
+        doc: "One line description"
+      ],
+      longdoc: [
+        type: :string,
+        doc: "Multi-line description"
       ]
     ],
     entities: [
       Mandate.Dsl.Argument.__entity__(),
-      Mandate.Dsl.Description.__entity__(),
-      Mandate.Dsl.Longdoc.__entity__(),
-      Mandate.Dsl.Run.__entity__(),
-      Mandate.Dsl.Shortdoc.__entity__(),
       Mandate.Dsl.Switch.__entity__()
-    ],
-    describe: "Configure the fields that are supported and required",
-    top_level?: true
+    ]
   }
 
   use Spark.Dsl.Extension,
     sections: [@root],
-    verifiers: [Mandate.Verifiers.VerifyRequired],
-    transformers: [Mandate.Transformers.AddDocAttributes]
+    transformers: [Mandate.Transformers.AddDocAttributes],
+    verifiers: [Spark.Dsl.Verifiers.VerifyEntityUniqueness]
 end

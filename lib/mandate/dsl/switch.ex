@@ -1,12 +1,13 @@
 defmodule Mandate.Dsl.Switch do
   @moduledoc false
-  defstruct [:name, :type, :required, :short, :doc]
+  defstruct [:__identifier__, :name, :type, :required, :short, :keep, :doc]
 
   @doc false
   def __entity__,
     do: %Spark.Dsl.Entity{
       name: :switch,
       args: [:name, :type],
+      identifier: :name,
       target: Mandate.Dsl.Switch,
       describe: "A switch that can be passed to the task",
       schema: [
@@ -15,7 +16,7 @@ defmodule Mandate.Dsl.Switch do
           required: true
         ],
         type: [
-          type: :atom,
+          type: {:one_of, [:boolean, :string, :integer, :float, :atom, :count]},
           default: :boolean
         ],
         default: [],
@@ -24,6 +25,11 @@ defmodule Mandate.Dsl.Switch do
         ],
         required: [
           type: :boolean,
+          default: false
+        ],
+        keep: [
+          type: :boolean,
+          doc: "keeps duplicate elements instead of overriding them",
           default: false
         ],
         doc: [

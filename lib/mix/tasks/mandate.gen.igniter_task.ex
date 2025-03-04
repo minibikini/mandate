@@ -1,5 +1,5 @@
-defmodule Mix.Tasks.Mandate.Gen.MixTask do
-  use Mandate, as: :mix_task
+defmodule Mix.Tasks.Mandate.Gen.IgniterTask do
+  use Mandate, as: :igniter_task
 
   shortdoc "Generates a new Mix Task"
   longdoc "Generates a new Mix Task, accepts arguments"
@@ -21,8 +21,9 @@ defmodule Mix.Tasks.Mandate.Gen.MixTask do
     keep true
   end
 
-  run fn args, _ ->
+  run fn igniter, args ->
     name = Mix.Task.task_name(__MODULE__)
     Mix.shell().info("Running `#{name}` with: #{inspect(args)}")
+    igniter
   end
 end

@@ -1,12 +1,13 @@
 defmodule Mandate.Dsl.Argument do
   @moduledoc false
-  defstruct [:name, :type, :required, :doc]
+  defstruct [:__identifier__, :name, :type, :required, :doc]
   @doc false
   def __entity__,
     do: %Spark.Dsl.Entity{
       name: :argument,
       args: [:name, :type],
       target: Mandate.Dsl.Argument,
+      identifier: :name,
       describe: "A argument that can be passed to the task",
       schema: [
         name: [
@@ -14,7 +15,7 @@ defmodule Mandate.Dsl.Argument do
           required: true
         ],
         type: [
-          type: {:one_of, [:string, :integer, :float]},
+          type: {:one_of, [:string, :integer, :float, :atom]},
           default: :string
         ],
         required: [
