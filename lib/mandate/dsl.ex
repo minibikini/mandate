@@ -21,10 +21,12 @@ defmodule Mandate.Dsl do
         """
       ],
       shortdoc: [
-        type: :string
+        type: :string,
+        doc: "One line description"
       ],
       longdoc: [
-        type: :string
+        type: :string,
+        doc: "Multi-line description"
       ]
     ],
     entities: [
