@@ -5,9 +5,15 @@ defmodule Mandate.Verifiers.VerifyRequired do
   alias Spark.Error.DslError
 
   def verify(dsl_state) do
+    IO.inspect(dsl_state)
+    |> Spark.Dsl.Verifier.fetch_option([:root], :run)
+    |> IO.inspect()
+
     with :ok <- verify_run(dsl_state) do
       :ok
     end
+
+    :ok
   end
 
   defp verify_run(dsl_state) do
@@ -27,6 +33,8 @@ defmodule Mandate.Verifiers.VerifyRequired do
 
       build_error(dsl_state, message, [:root, :entities, :run])
     end
+
+    :ok
   end
 
   defp build_error(state, message, path) do

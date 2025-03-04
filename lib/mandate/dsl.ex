@@ -50,6 +50,6 @@ defmodule Mandate.Dsl do
 
   use Spark.Dsl.Extension,
     sections: [@root],
-    # verifiers: [Mandate.Verifiers.VerifyRequired],
+    verifiers: [Spark.Dsl.Verifiers.VerifyEntityUniqueness],
     transformers: [Mandate.Transformers.AddDocAttributes]
 end
