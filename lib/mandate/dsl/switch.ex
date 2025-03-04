@@ -1,6 +1,6 @@
 defmodule Mandate.Dsl.Switch do
   @moduledoc false
-  defstruct [:name, :type, :required, :short, :doc]
+  defstruct [:name, :type, :required, :short, :keep, :doc]
 
   @doc false
   def __entity__,
@@ -23,6 +23,10 @@ defmodule Mandate.Dsl.Switch do
           type: :atom
         ],
         required: [
+          type: :boolean,
+          default: false
+        ],
+        keep: [
           type: :boolean,
           default: false
         ],
