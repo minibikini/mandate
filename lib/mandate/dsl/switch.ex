@@ -20,6 +20,7 @@ defmodule Mandate.Dsl.Switch do
           default: :boolean
         ],
         default: [],
+        example: [],
         short: [
           type: :atom
         ],
