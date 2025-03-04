@@ -7,6 +7,7 @@ spark_locals_without_parens = [
   description: 2,
   doc: 1,
   example: 1,
+  keep: 1,
   longdoc: 1,
   longdoc: 2,
   required: 1,

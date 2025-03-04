@@ -15,7 +15,7 @@ defmodule Mandate.Dsl.Switch do
           required: true
         ],
         type: [
-          type: :atom,
+          type: {:one_of, [:boolean, :string, :integer, :float, :atom, :count]},
           default: :boolean
         ],
         default: [],
@@ -28,6 +28,7 @@ defmodule Mandate.Dsl.Switch do
         ],
         keep: [
           type: :boolean,
+          doc: "keeps duplicate elements instead of overriding them",
           default: false
         ],
         doc: [

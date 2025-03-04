@@ -1,9 +1,11 @@
 defmodule Mandate.OptionParser do
-  alias Mandate.Dsl.Switch
+  @moduledoc false
+
   alias Mandate.Dsl.Argument
+  alias Mandate.Dsl.Switch
 
   def parse_argv(root, argv) do
-    parsed_argv = OptionParser.parse(argv, parse_opts(root))
+    parsed_argv = OptionParser.parse(argv, section_to_parse_opts(root))
 
     with {:ok, pos_args} <- validate_pos_args(root, parsed_argv),
          {:ok, switches} <- validate_switches(parsed_argv) do
@@ -30,53 +32,39 @@ defmodule Mandate.OptionParser do
     end
   end
 
-  defp parse_pos_arg({arg, schema}) do
-    value =
-      case schema.type do
-        :string -> arg
-        :integer -> String.to_integer(arg)
-        :float -> String.to_float(arg)
-      end
+  defp parse_pos_arg({arg, %{name: name, type: :string}}), do: {name, arg}
+  defp parse_pos_arg({arg, %{name: name, type: :integer}}), do: {name, String.to_integer(arg)}
+  defp parse_pos_arg({arg, %{name: name, type: :float}}), do: {name, String.to_float(arg)}
+  defp parse_pos_arg({arg, %{name: name, type: :atom}}), do: {name, String.to_existing_atom(arg)}
 
-    {schema.name, value}
-  end
+  defp validate_required_pos_args(pos_args_schema_required_len, pos_args_len)
+       when pos_args_schema_required_len <= pos_args_len,
+       do: :ok
 
-  defp validate_required_pos_args(pos_args_schema_required_len, pos_args_len) do
-    if pos_args_schema_required_len > pos_args_len do
+  defp validate_required_pos_args(pos_args_schema_required_len, pos_args_len),
+    do:
       {:error,
        "Wrong number of required arguments. Expected #{pos_args_schema_required_len} but got #{pos_args_len}."}
-    else
-      :ok
-    end
-  end
 
-  defp validate_pos_args_len(pos_args_len, max) do
-    if pos_args_len > max do
-      {:error, "Too many arguments. Expected maximum #{max} but got #{pos_args_len}."}
-    else
-      :ok
-    end
-  end
+  defp validate_pos_args_len(pos_args_len, max) when pos_args_len <= max, do: :ok
 
-  defp parse_opts(root) do
+  defp validate_pos_args_len(pos_args_len, max),
+    do: {:error, "Too many arguments. Expected maximum #{max} but got #{pos_args_len}."}
+
+  defp section_to_parse_opts(root) do
     root
     |> Enum.filter(&is_struct(&1, Switch))
-    |> Enum.reduce([aliases: [], strict: []], fn switch, [aliases: aliases, strict: strict] ->
-      strict = [switch_to_schema(switch) | strict]
-
-      aliases =
-        if switch.short do
-          [{switch.short, switch.name} | aliases]
-        else
-          aliases
-        end
-
-      [aliases: aliases, strict: strict]
-    end)
+    |> Enum.reduce([aliases: [], strict: []], &switch_to_parse_opts/2)
   end
 
-  defp switch_to_schema(%Switch{keep: true} = switch),
-    do: {switch.name, {switch.type, :keep}}
+  defp switch_to_parse_opts(switch, aliases: aliases, strict: strict),
+    do: [aliases: switch_to_alias(switch, aliases), strict: switch_to_strict(switch, strict)]
 
-  defp switch_to_schema(%Switch{} = switch), do: {switch.name, switch.type}
+  defp switch_to_strict(switch, strict), do: [switch_to_schema(switch) | strict]
+
+  defp switch_to_alias(%Switch{short: nil}, aliases), do: aliases
+  defp switch_to_alias(%Switch{short: short, name: name}, aliases), do: [{short, name} | aliases]
+
+  defp switch_to_schema(%Switch{name: name, type: type, keep: true}), do: {name, [type, :keep]}
+  defp switch_to_schema(%Switch{name: name, type: type}), do: {name, type}
 end

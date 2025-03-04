@@ -14,7 +14,7 @@ defmodule Mandate.Dsl.Argument do
           required: true
         ],
         type: [
-          type: {:one_of, [:string, :integer, :float]},
+          type: {:one_of, [:string, :integer, :float, :atom]},
           default: :string
         ],
         required: [

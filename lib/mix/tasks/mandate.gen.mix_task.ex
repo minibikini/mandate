@@ -18,6 +18,7 @@ defmodule Mix.Tasks.Mandate.Gen.MixTask do
 
   switch :pin, :integer do
     short :p
+    keep true
   end
 
   run fn options ->
