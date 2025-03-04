@@ -27,6 +27,10 @@ defmodule Mandate.Dsl do
       longdoc: [
         type: :string,
         doc: "Multi-line description"
+      ],
+      example: [
+        type: :string,
+        doc: "Task usage example"
       ]
     ],
     entities: [
