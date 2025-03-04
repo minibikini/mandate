@@ -9,7 +9,7 @@ defmodule Mandate.MixTask do
 
         with {:ok, parsed} <- Mandate.OptionParser.parse_argv(root, argv),
              {:ok, run} <- Mandate.Info.root_run(__MODULE__) do
-          run.(parsed)
+          run.(parsed, nil)
         else
           {:error, err} -> Mix.shell().error(err)
         end

@@ -7,7 +7,7 @@ defmodule Mandate.Dsl do
     schema: [
       run: [
         # type: {:one_of, [{:fun, 1}, {:fun, 2}]},
-        type: {:fun, 1},
+        type: {:fun, 2},
         required: true,
         doc: """
         The function that will be called when the command/task is run. The function should accept a single argument, a keyword list of the parsed arguments and switches.
