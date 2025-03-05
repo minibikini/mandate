@@ -5,7 +5,7 @@ defmodule Mandate.Dsl.Argument do
   def __entity__,
     do: %Spark.Dsl.Entity{
       name: :argument,
-      args: [:name, :type],
+      args: [:name, {:optional, :type}],
       target: Mandate.Dsl.Argument,
       identifier: :name,
       describe: "A argument that can be passed to the task",
