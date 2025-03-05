@@ -8,34 +8,37 @@ defmodule Mandate.OptionParser do
     parsed_argv = OptionParser.parse(argv, section_to_parse_opts(root))
 
     with {:ok, pos_args} <- validate_pos_args(root, parsed_argv),
-         {:ok, switches} <- validate_switches(parsed_argv),
+         {:ok, switches} <- parse_switches(parsed_argv, root),
          {:ok, switches} <- set_switch_defaults(switches, root) do
       {:ok, pos_args ++ switches}
     end
   end
 
   defp set_switch_defaults(switches, root) do
-    switches =
-      root
-      |> switch_schemas()
-      |> Enum.reduce(switches, fn schema, switches ->
-        if Keyword.has_key?(switches, schema.name) do
-          switches
-        else
-          case schema do
-            %{type: :boolean, default: nil} -> [{schema.name, false} | switches]
-            %{default: nil} -> switches
-            %{default: value} -> [{schema.name, value} | switches]
-          end
-        end
+    clean_switches = Keyword.reject(switches, fn {_key, value} -> is_nil(value) end)
+    schemas = switch_schemas(root)
+
+    switches_with_defaults =
+      Enum.reduce(schemas, clean_switches, fn schema, acc ->
+        default = get_default_value(schema)
+        Keyword.put_new(acc, schema.name, maybe_wrap_value(schema, default))
       end)
 
-    {:ok, switches}
+    {:ok, switches_with_defaults}
   end
 
-  defp validate_switches({switches, _pos_args, []}), do: {:ok, switches}
+  defp get_default_value(%{type: :boolean, default: nil}), do: false
+  defp get_default_value(%{default: nil}), do: nil
+  defp get_default_value(%{default: value}), do: value
 
-  defp validate_switches({_switches, _pos_args, invalid}),
+  defp maybe_wrap_value(%{keep: true}, nil), do: []
+  defp maybe_wrap_value(%{keep: true}, value), do: List.wrap(value)
+  defp maybe_wrap_value(_schema, value), do: value
+
+  defp parse_switches({switches, _pos_args, []}, root),
+    do: {:ok, root |> switch_schemas() |> Enum.map(&parse_switch(&1, switches))}
+
+  defp parse_switches({_switches, _pos_args, invalid}, _root),
     do: {:error, "Invalid options: #{inspect(invalid)}"}
 
   defp validate_pos_args(root, {_, pos_args, _}) do
@@ -56,6 +59,23 @@ defmodule Mandate.OptionParser do
   defp parse_pos_arg({arg, %{name: name, type: :integer}}), do: {name, String.to_integer(arg)}
   defp parse_pos_arg({arg, %{name: name, type: :float}}), do: {name, String.to_float(arg)}
   defp parse_pos_arg({arg, %{name: name, type: :atom}}), do: {name, String.to_existing_atom(arg)}
+
+  defp parse_switch(%{name: name, keep: true, type: :atom}, switches) do
+    {name,
+     switches
+     |> Keyword.take([name])
+     |> Keyword.values()
+     |> Enum.map(&String.to_existing_atom/1)}
+  end
+
+  defp parse_switch(%{name: name, keep: true}, switches),
+    do: {name, switches |> Keyword.take([name]) |> Keyword.values()}
+
+  defp parse_switch(%{name: name, type: :atom}, switches),
+    do: {name, switches |> Keyword.get(name) |> String.to_existing_atom()}
+
+  defp parse_switch(%{name: name}, switches),
+    do: {name, switches |> Keyword.get(name)}
 
   defp validate_required_pos_args(pos_args_schema_required_len, pos_args_len)
        when pos_args_schema_required_len <= pos_args_len,
@@ -89,6 +109,11 @@ defmodule Mandate.OptionParser do
   defp switch_to_alias(%Switch{short: nil}, aliases), do: aliases
   defp switch_to_alias(%Switch{short: short, name: name}, aliases), do: [{short, name} | aliases]
 
-  defp switch_to_schema(%Switch{name: name, type: type, keep: true}), do: {name, [type, :keep]}
-  defp switch_to_schema(%Switch{name: name, type: type}), do: {name, type}
+  defp switch_to_schema(%Switch{name: name, type: type, keep: true}),
+    do: {name, [maybe_as_string(type), :keep]}
+
+  defp switch_to_schema(%Switch{name: name, type: type}), do: {name, maybe_as_string(type)}
+
+  defp maybe_as_string(:atom), do: :string
+  defp maybe_as_string(type), do: type
 end

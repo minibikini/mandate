@@ -6,7 +6,7 @@ defmodule Mandate.Dsl.Switch do
   def __entity__,
     do: %Spark.Dsl.Entity{
       name: :switch,
-      args: [:name, :type],
+      args: [:name, {:optional, :type}],
       identifier: :name,
       target: Mandate.Dsl.Switch,
       describe: "A switch that can be passed to the task",
@@ -20,6 +20,7 @@ defmodule Mandate.Dsl.Switch do
           default: :boolean
         ],
         default: [],
+        example: [],
         short: [
           type: :atom
         ],

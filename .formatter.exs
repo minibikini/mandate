@@ -1,5 +1,6 @@
 # Used by "mix format"
 spark_locals_without_parens = [
+  argument: 1,
   argument: 2,
   argument: 3,
   default: 1,
@@ -11,8 +12,10 @@ spark_locals_without_parens = [
   run: 1,
   short: 1,
   shortdoc: 1,
+  switch: 1,
   switch: 2,
-  switch: 3
+  switch: 3,
+  type: 1
 ]
 
 [

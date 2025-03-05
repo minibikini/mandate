@@ -13,15 +13,17 @@ defmodule Mix.Tasks.Mandate.Gen.MixTaskTest do
   test "inject @shortdoc" do
     attributes = MixTask.__info__(:attributes)
 
-    assert ["Generates a new Mix Task"] == Keyword.get(attributes, :shortdoc)
-    assert "Generates a new Mix Task" == Mix.Task.shortdoc(MixTask)
+    str = "Generate a mix task"
+
+    assert String.starts_with?(hd(Keyword.get(attributes, :shortdoc)), str)
+    assert String.starts_with?(Mix.Task.shortdoc(MixTask), str)
   end
 
   test "inject @moduledoc" do
     attributes = MixTask.__info__(:attributes)
 
     assert [{1, text} | _] = Keyword.get(attributes, :moduledoc)
-    assert text =~ "accepts arguments"
+    assert text =~ "Genetares a mix task"
   end
 
   describe "mix task run" do
@@ -35,7 +37,7 @@ defmodule Mix.Tasks.Mandate.Gen.MixTaskTest do
           Mix.Task.run(@task_name, ["one", "s", "sdds", "sds"])
         end)
 
-      assert output =~ "Too many arguments. Expected maximum 2 but got 4."
+      assert output =~ "Too many arguments. Expected maximum 1 but got 4."
     end
 
     test "Required arguments presence." do

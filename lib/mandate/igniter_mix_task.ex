@@ -11,7 +11,9 @@ defmodule Mandate.IgniterMixTask do
              {:ok, run} <- Mandate.Info.root_run(__MODULE__) do
           run.(igniter, parsed)
         else
-          {:error, err} -> Mix.shell().error(err)
+          {:error, err} ->
+            Mix.shell().error(err)
+            igniter
         end
       end
     end
