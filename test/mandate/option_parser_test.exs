@@ -110,4 +110,44 @@ defmodule Mandate.OptionParserTest do
     assert Mandate.OptionParser.parse(["--tags", "admin", "--tags", "user"], root) ==
              {:ok, %{tags: [:admin, :user]}}
   end
+
+  test "parses count switch with short alias" do
+    root = [%Switch{name: :verbose, type: :count, short: :v}]
+    assert Mandate.OptionParser.parse(["-v", "-v", "-v"], root) == {:ok, %{verbose: 3}}
+  end
+
+  test "parses count switch with long form" do
+    root = [%Switch{name: :verbose, type: :count}]
+    assert Mandate.OptionParser.parse(["--verbose", "--verbose"], root) == {:ok, %{verbose: 2}}
+  end
+
+  test "raises on non-existing atom for switch" do
+    root = [%Switch{name: :env, type: :atom}]
+
+    assert_raise ArgumentError, fn ->
+      Mandate.OptionParser.parse(["--env", "non_existing_atom"], root)
+    end
+  end
+
+  test "parses keep switch with atom type" do
+    root = [%Switch{name: :roles, type: :atom, keep: true}]
+
+    assert Mandate.OptionParser.parse(["--roles", "admin", "--roles", "user"], root) ==
+             {:ok, %{roles: [:admin, :user]}}
+  end
+
+  test "includes optional switch as nil if not provided and no default" do
+    root = [%Switch{name: :option, type: :string}]
+    assert Mandate.OptionParser.parse([], root) == {:ok, %{option: nil}}
+  end
+
+  test "sets default value for switch" do
+    root = [%Switch{name: :port, type: :integer, default: 8080}]
+    assert Mandate.OptionParser.parse([], root) == {:ok, %{port: 8080}}
+  end
+
+  test "sets default value for boolean switch" do
+    root = [%Switch{name: :debug, type: :boolean, default: true}]
+    assert Mandate.OptionParser.parse([], root) == {:ok, %{debug: true}}
+  end
 end
