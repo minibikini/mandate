@@ -50,8 +50,11 @@ defmodule Mandate.OptionParser do
   def parse_switches({switches, _pos_args, []}, root),
     do: {:ok, root |> switch_schemas() |> Enum.map(&parse_switch(&1, switches))}
 
-  def parse_switches({_switches, _pos_args, invalid}, _root),
-    do: {:error, "Invalid options: #{inspect(invalid)}"}
+  def parse_switches({_switches, _pos_args, invalid}, _root) do
+    invalid = Enum.map(invalid, fn {flag, _} -> flag end)
+
+    {:error, "Invalid options: #{inspect(invalid)}"}
+  end
 
   @spec parse_positional_args(list(), {term(), list(), term()}) ::
           {:ok, map()} | {:error, String.t()}
