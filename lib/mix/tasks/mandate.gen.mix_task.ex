@@ -1,8 +1,9 @@
 defmodule Mix.Tasks.Mandate.Gen.MixTask do
-  use Mandate, as: :igniter_task
+  use Mandate.Task, as: :igniter
 
   example "mix mandate.gen.mix_task my_app.my_task --example arg"
 
+  longdoc "Generate a mix task for your application"
   shortdoc "Generate a mix task for your application"
 
   longdoc """
@@ -66,8 +67,11 @@ defmodule Mix.Tasks.Mandate.Gen.MixTask do
     keep true
   end
 
-  run fn igniter, options ->
-    task_name = options[:task_name]
+  run fn igniter ->
+    positional = igniter.args.positional
+    options = igniter.args.options
+
+    task_name = positional[:task_name]
 
     module_name = module_name(task_name)
     app_name = Igniter.Project.Application.app_name(igniter)
@@ -142,7 +146,7 @@ defmodule Mix.Tasks.Mandate.Gen.MixTask do
     [
       """
         defmodule #{inspect(module_name)} do
-          use Mandate, as: :mix_task
+        use Mandate.Task
 
           # shortdoc "Generates a new Mix Task"
           # longdoc "Generates a new Mix Task, accepts arguments"
@@ -152,7 +156,7 @@ defmodule Mix.Tasks.Mandate.Gen.MixTask do
       Enum.map(options[:switch], &render_switch/1),
       """
 
-        run fn args, _ ->
+        run fn args ->
           Mix.shell().info("Running `#{task_name}` with: \#{inspect(args)}")
         end
       end

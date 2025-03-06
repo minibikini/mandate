@@ -21,6 +21,8 @@ defmodule Mix.Tasks.Mandate.Gen.MixTaskTest do
   test "inject @moduledoc" do
     attributes = MixTask.__info__(:attributes)
 
+    IO.inspect(attributes)
+
     assert [{1, text} | _] = Keyword.get(attributes, :moduledoc)
     assert text =~ "Genetares a mix task"
   end
