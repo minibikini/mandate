@@ -1,5 +1,5 @@
 defmodule Mandate.OptionParserTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias Mandate.Dsl.Argument
   alias Mandate.Dsl.Switch
@@ -165,6 +165,37 @@ defmodule Mandate.OptionParserTest do
 
       assert Mandate.OptionParser.parse(["--host", "localhost"], root) ==
                {:ok, %{host: "localhost", port: 4000}}
+    end
+  end
+
+  describe "edge cases" do
+    test "handles empty list for keep: true switches when not provided" do
+      root = [%Switch{name: :tags, type: :string, keep: true}]
+      assert Mandate.OptionParser.parse([], root) == {:ok, %{tags: []}}
+    end
+
+    test "correctly merges positional args and switches" do
+      root = [
+        %Argument{name: :source, type: :string, required: true},
+        %Switch{name: :source, type: :string, default: "override"}
+      ]
+
+      assert Mandate.OptionParser.parse(["input.txt"], root) == {:ok, %{source: "override"}}
+    end
+
+    test "handles atom positional arguments" do
+      root = [%Argument{name: :env, type: :atom, required: true}]
+      assert Mandate.OptionParser.parse(["prod"], root) == {:ok, %{env: :prod}}
+    end
+
+    test "prioritizes provided switch values over defaults" do
+      root = [%Switch{name: :level, type: :integer, default: 1}]
+      assert Mandate.OptionParser.parse(["--level", "5"], root) == {:ok, %{level: 5}}
+    end
+
+    test "handles boolean switches with no argument" do
+      root = [%Switch{name: :verbose, type: :boolean}]
+      assert Mandate.OptionParser.parse(["--verbose"], root) == {:ok, %{verbose: true}}
     end
   end
 end
