@@ -22,3 +22,4 @@ mandate-*.tar
 # Temporary files, for example, from tests.
 /tmp/
 .aider*
+.DS_Store
