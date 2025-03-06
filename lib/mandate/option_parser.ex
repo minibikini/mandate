@@ -4,17 +4,21 @@ defmodule Mandate.OptionParser do
   alias Mandate.Dsl.Argument
   alias Mandate.Dsl.Switch
 
-  def parse_argv(root, argv) do
-    parsed_argv = OptionParser.parse(argv, section_to_parse_opts(root))
+  def parse(argv, root) do
+    parsed_argv = parse_argv(argv, root)
 
-    with {:ok, pos_args} <- validate_pos_args(root, parsed_argv),
+    with {:ok, pos_args} <- parse_positional_args(root, parsed_argv),
          {:ok, switches} <- parse_switches(parsed_argv, root),
          {:ok, switches} <- set_switch_defaults(switches, root) do
       {:ok, pos_args ++ switches}
     end
   end
 
-  defp set_switch_defaults(switches, root) do
+  def parse_argv(argv, root) do
+    OptionParser.parse(argv, section_to_parse_opts(root))
+  end
+
+  def set_switch_defaults(switches, root) do
     clean_switches = Keyword.reject(switches, fn {_key, value} -> is_nil(value) end)
     schemas = switch_schemas(root)
 
@@ -35,13 +39,13 @@ defmodule Mandate.OptionParser do
   defp maybe_wrap_value(%{keep: true}, value), do: List.wrap(value)
   defp maybe_wrap_value(_schema, value), do: value
 
-  defp parse_switches({switches, _pos_args, []}, root),
+  def parse_switches({switches, _pos_args, []}, root),
     do: {:ok, root |> switch_schemas() |> Enum.map(&parse_switch(&1, switches))}
 
-  defp parse_switches({_switches, _pos_args, invalid}, _root),
+  def parse_switches({_switches, _pos_args, invalid}, _root),
     do: {:error, "Invalid options: #{inspect(invalid)}"}
 
-  defp validate_pos_args(root, {_, pos_args, _}) do
+  def parse_positional_args(root, {_, pos_args, _}) do
     pos_args_schema = Enum.filter(root, &is_struct(&1, Argument))
     pos_args_schema_required = Enum.filter(pos_args_schema, & &1.required)
 
@@ -95,7 +99,7 @@ defmodule Mandate.OptionParser do
     Enum.filter(root, &is_struct(&1, Switch))
   end
 
-  defp section_to_parse_opts(root) do
+  def section_to_parse_opts(root) do
     root
     |> switch_schemas()
     |> Enum.reduce([aliases: [], strict: []], &switch_to_parse_opts/2)
