@@ -7,7 +7,7 @@ defmodule Mandate.MixTask do
       def run(argv) do
         root = Mandate.Info.root(__MODULE__)
 
-        with {:ok, parsed} <- Mandate.OptionParser.parse_argv(root, argv),
+        with {:ok, parsed} <- Mandate.OptionParser.parse(argv, root),
              {:ok, run} <- Mandate.Info.root_run(__MODULE__) do
           run.(parsed, nil)
         else
