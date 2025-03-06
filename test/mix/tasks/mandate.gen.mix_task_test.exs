@@ -1,7 +1,6 @@
 defmodule Mix.Tasks.Mandate.Gen.MixTaskTest do
   use ExUnit.Case, async: true
   alias Mix.Tasks.Mandate.Gen.MixTask
-  import ExUnit.CaptureIO
 
   @task_name "mandate.gen.mix_task"
 
@@ -32,21 +31,15 @@ defmodule Mix.Tasks.Mandate.Gen.MixTaskTest do
     end
 
     test "Too many arguments" do
-      output =
-        capture_io(:stderr, fn ->
-          Mix.Task.run(@task_name, ["one", "s", "sdds", "sds"])
-        end)
-
-      assert output =~ "Too many arguments. Expected maximum 1 but got 4."
+      assert_raise RuntimeError, "Too many arguments. Expected maximum 1 but got 4.", fn ->
+        Mix.Task.run(@task_name, ["one", "s", "sdds", "sds"])
+      end
     end
 
     test "Required arguments presence." do
-      output =
-        capture_io(:stderr, fn ->
-          Mix.Task.run(@task_name, [])
-        end)
-
-      assert output =~ "Wrong number of required arguments. Expected 1 but got 0."
+      assert_raise RuntimeError,
+                   "Wrong number of required arguments. Expected 1 but got 0.",
+                   fn -> Mix.Task.run(@task_name, []) end
     end
   end
 end
