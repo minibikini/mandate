@@ -10,7 +10,7 @@ defmodule Mandate.OptionParser do
     with {:ok, pos_args} <- parse_positional_args(root, parsed_argv),
          {:ok, switches} <- parse_switches(parsed_argv, root),
          {:ok, switches} <- set_switch_defaults(switches, root) do
-      {:ok, pos_args ++ switches}
+      {:ok, Map.merge(pos_args, Map.new(switches))}
     end
   end
 
@@ -28,7 +28,15 @@ defmodule Mandate.OptionParser do
         Keyword.put_new(acc, schema.name, maybe_wrap_value(schema, default))
       end)
 
-    {:ok, switches_with_defaults}
+    missing_switch =
+      schemas
+      |> Enum.filter(& &1.required)
+      |> Enum.find(fn schema -> is_nil(switches_with_defaults[schema.name]) end)
+
+    case missing_switch do
+      nil -> {:ok, switches_with_defaults}
+      schema -> {:error, "Missing required switch: #{inspect(schema.name)}"}
+    end
   end
 
   defp get_default_value(%{type: :boolean, default: nil}), do: false
@@ -45,6 +53,8 @@ defmodule Mandate.OptionParser do
   def parse_switches({_switches, _pos_args, invalid}, _root),
     do: {:error, "Invalid options: #{inspect(invalid)}"}
 
+  @spec parse_positional_args(list(), {term(), list(), term()}) ::
+          {:ok, map()} | {:error, String.t()}
   def parse_positional_args(root, {_, pos_args, _}) do
     pos_args_schema = Enum.filter(root, &is_struct(&1, Argument))
     pos_args_schema_required = Enum.filter(pos_args_schema, & &1.required)
@@ -55,7 +65,10 @@ defmodule Mandate.OptionParser do
 
     with :ok <- validate_required_pos_args(pos_args_schema_required_len, pos_args_len),
          :ok <- validate_pos_args_len(pos_args_len, pos_args_schema_len) do
-      {:ok, pos_args |> Enum.zip(pos_args_schema) |> Enum.map(&parse_pos_arg/1)}
+      parsed_pos_args =
+        pos_args |> Enum.zip(pos_args_schema) |> Enum.map(&parse_pos_arg/1) |> Map.new()
+
+      {:ok, parsed_pos_args}
     end
   end
 
