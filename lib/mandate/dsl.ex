@@ -1,33 +1,54 @@
 defmodule Mandate.Dsl do
   @moduledoc false
-  defstruct [:__identifier__, :name, :type, :required, :default, :short, :keep, :doc]
+
+  @commands %Spark.Dsl.Section{
+    name: :commands,
+    describe: "A collection of commands",
+    # args: [:name, {:optional, :type}],
+    # identifier: :name,
+    # target: Mandate.Dsl.Commands,
+    schema: [
+      default: [
+        type: :atom,
+        default: :main
+      ]
+    ],
+    # top_level?: true,
+    entities: [
+      Mandate.Dsl.Command.__entity__()
+    ]
+  }
 
   @doc false
-  @mandate %Spark.Dsl.Section{
-    name: :mandate,
-    describe: "The app root",
-    top_level?: true
-    # hex docs
-    # examples: examples(),
-    # ?
-    # imports: imports(),
-    # links: links(),
-    # modules: modules(),
-    # no_depend_modules: no_depend_modules(),
-    # patchable?: patchable?(),
-    # sections: sections()
-    # snippet: snippet(),
-    # schema: [
-    #   name: [
-    #     type: :atom
-    #   ]
-    # ],
-    # entities: [
-    #   Mandate.Dsl.Command.__entity__()
-    # ]
-  }
+  # @mandate %Spark.Dsl.Section{
+  #   name: :mandate,
+  #   describe: "The app root",
+  #   top_level?: true,
+  #   sections: [@commands],
+  #   schema: [
+  #     # default: [
+  #     #   type: :atom,
+  #     #   doc: "The default command to run"
+  #     # ]
+  #   ]
+
+  # hex docs
+  # examples: examples(),
+  # ?
+  # imports: imports(),
+  # links: links(),
+  # modules: modules(),
+  # no_depend_modules: no_depend_modules(),
+  # patchable?: patchable?(),
+  # snippet: snippet(),
+
+  # ],
+  # entities: [
+  #   Mandate.Dsl.Command.__entity__()
+  # ]
+  # }
   use Spark.Dsl.Extension,
-    sections: [@mandate],
+    sections: [@commands],
     transformers: [Mandate.Transformers.AddDocAttributes],
     verifiers: [Spark.Dsl.Verifiers.VerifyEntityUniqueness]
 end
