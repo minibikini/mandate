@@ -3,6 +3,8 @@ spark_locals_without_parens = [
   argument: 1,
   argument: 2,
   argument: 3,
+  command: 2,
+  command: 3,
   default: 1,
   doc: 1,
   example: 1,
