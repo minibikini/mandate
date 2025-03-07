@@ -11,13 +11,8 @@ defmodule Mandate.MixProject do
       elixir: "~> 1.18",
       source_url: "https://github.com/minibikini/mandate",
       start_permanent: Mix.env() == :prod,
-      escript: escript(),
       deps: deps()
     ]
-  end
-
-  def escript do
-    [main_module: MyCLi]
   end
 
   defp description do
