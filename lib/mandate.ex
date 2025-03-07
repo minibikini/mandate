@@ -8,15 +8,21 @@ defmodule Mandate do
       extensions: [Mandate.Dsl]
     ]
 
-  quote do
-    def main(argv) do
-      root = Mandate.Info.root(__MODULE__)
+  def handle_before_compile(_opts) do
+    quote do
+      def main(argv) do
+        IO.inspect(argv, label: "mod")
+        # Spark.Dsl.Builder.
+        # Mandate.Info.
+        # Mandate.Info.
+        # _mandate = Mandate.Info.mandate(__MODULE__) |> IO.inspect()
 
-      with {:ok, parsed} <- Mandate.OptionParser.parse(argv, root),
-           {:ok, run} <- Mandate.Info.root_run(__MODULE__) do
-        run.(parsed)
-      else
-        {:error, err} -> IO.puts(:stderr, "Error: #{inspect(err)}")
+        # with {:ok, parsed} <- Mandate.OptionParser.parse(argv, mandate),
+        #      {:ok, run} <- Mandate.Info.mandate_run(__MODULE__) do
+        #   run.(parsed)
+        # else
+        #   {:error, err} -> IO.puts(:stderr, "Error: #{inspect(err)}")
+        # end
       end
     end
   end
