@@ -11,6 +11,7 @@ defmodule Mandate.MixProject do
       elixir: "~> 1.18",
       source_url: "https://github.com/minibikini/mandate",
       start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -42,6 +43,12 @@ defmodule Mandate.MixProject do
       files: ~w(lib .formatter.exs mix.exs README* LICENSE* CHANGELOG*),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/minibikini/mandate"}
+    ]
+  end
+
+  defp aliases do
+    [
+      formatter: ["spark.formatter --extensions Mandate.Dsl,Mandate.TaskDsl"]
     ]
   end
 end
