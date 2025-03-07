@@ -1,12 +1,12 @@
 defmodule Mandate.Schema do
   @schema [
     run: [
-      type: {:fun, 1},
-      required: true,
+      type: {:or, [{:mfa_or_fun, 1}, {:mfa_or_fun, 2}]},
+      required: false,
       doc: """
-      The function that will be called when the command/task is run. The function should accept a single argument, a keyword list of the parsed arguments and switches.
+      Provide an anonymous function which implements a `run/1-2` callback. The function that will be called when the command/task is run.
 
-      Igniter tasks accept the Igniter context instead of the args.
+      Cannot be provided at the same time as the `impl` argument.
       """,
       snippet: """
       fn args ->

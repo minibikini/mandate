@@ -1,41 +1,6 @@
 defmodule Mandate.Dsl do
   @moduledoc false
 
-  defmodule Command do
-    defstruct [:__identifier__, :name, :module, :run, :shortdoc, :longdoc, options: []]
-  end
-
-  @command_schema Mandate.Schema.merge([:shortdoc, :longdoc, :example],
-                    name: [type: :atom, required: true],
-                    module: [type: :atom],
-                    run: [
-                      type: {:fun, 1},
-                      # required: true,
-                      doc: """
-                      The function that will be called when the command/task is run. The function should accept a single argument, a keyword list of the parsed arguments and switches.
-
-                      Igniter tasks accept the Igniter context instead of the args.
-                      """,
-                      snippet: """
-                      fn args ->
-
-                      end
-                      """
-                    ]
-                  )
-
-  @command %Spark.Dsl.Entity{
-    name: :command,
-    args: [:name, :module],
-    identifier: :name,
-    target: Command,
-    describe: "Defines a CLI command",
-    schema: @command_schema,
-    entities: [
-      options: [Mandate.Dsl.Argument.__entity__(), Mandate.Dsl.Switch.__entity__()]
-    ]
-  }
-
   @commands %Spark.Dsl.Section{
     name: :commands,
     describe: """
@@ -54,7 +19,7 @@ defmodule Mandate.Dsl do
       """
     ],
     entities: [
-      @command
+      Mandate.Dsl.Command.__entity__()
     ],
     schema: [
       default: [
