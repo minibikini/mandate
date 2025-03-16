@@ -133,7 +133,7 @@ defmodule Mandate.OptionParserTest do
       root = [%Switch{name: :env, type: :atom}]
 
       assert_raise ArgumentError, fn ->
-        Mandate.OptionParser.parse(["--env", "non_existing_atom"], root)
+        Mandate.OptionParser.parse(["--env", "non_existing_atom1"], root)
       end
     end
   end
