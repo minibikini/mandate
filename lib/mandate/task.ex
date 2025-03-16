@@ -59,7 +59,7 @@ defmodule Mandate.Task do
 
         parsed_argv = Mandate.OptionParser.parse_argv(argv, task)
 
-        {_positional, argv_flags} = positional_args!(argv)
+        {_positional, argv_flags} = Igniter.Mix.Task.__positional_args__!(__MODULE__, argv)
 
         with {:ok, pos_args} <- Mandate.OptionParser.parse_positional_args(task, parsed_argv),
              {:ok, switches} <- Mandate.OptionParser.parse_switches(parsed_argv, task),

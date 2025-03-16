@@ -9,41 +9,28 @@ defmodule Mandate do
     ]
 
   def handle_before_compile(_opts) do
-    IO.inspect(__MODULE__, label: "handle_before_compile")
-
     quote do
       def main(argv) do
-        IO.inspect({__MODULE__, argv}, label: "argv")
-
-        commands =
-          Spark.Dsl.Extension.get_entities(__MODULE__, [:commands])
-          |> Enum.map(fn cmd ->
-            if Spark.Dsl.is?(cmd.module, Mandate.Command) do
-              # Spark.Dsl.Extension.get_
-
-              Mandate.Command.Info.mod(cmd.module) |> IO.inspect(label: "modd")
-
-              state = Spark.Dsl.Extension.get_entities(cmd.module, [:mod])
-              IO.inspect({cmd.name, cmd.module, state})
-
-              cmd
-            else
-              cmd
+        Spark.Dsl.Extension.get_entities(__MODULE__, [:commands])
+        |> Enum.map(fn cmd ->
+          module =
+            case cmd.impl do
+              {mod, _opts} -> mod
+              mod when is_atom(mod) and not is_nil(mod) -> mod
+              nil -> cmd.module
             end
-          end)
-          |> IO.inspect()
 
-        # Spark.Dsl.Builder.
-        # Mandate.Info.
-        # Mandate.Info.
-        # _mandate = Mandate.Info.mandate(__MODULE__) |> IO.inspect()
+          if module && Spark.Dsl.is?(module, Mandate.Command) do
+            Mandate.Command.Info.mod(module)
 
-        # with {:ok, parsed} <- Mandate.OptionParser.parse(argv, mandate),
-        #      {:ok, run} <- Mandate.Info.mandate_run(__MODULE__) do
-        #   run.(parsed)
-        # else
-        #   {:error, err} -> IO.puts(:stderr, "Error: #{inspect(err)}")
-        # end
+            state = Spark.Dsl.Extension.get_entities(module, [:mod])
+            # IO.inspect({cmd.name, module, state})
+
+            cmd
+          else
+            cmd
+          end
+        end)
       end
     end
   end

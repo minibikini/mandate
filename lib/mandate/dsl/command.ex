@@ -1,6 +1,17 @@
 defmodule Mandate.Dsl.Command do
   @moduledoc false
-  defstruct [:__identifier__, :name, :impl, :run, :shortdoc, :longdoc, options: []]
+  defstruct [
+    :__identifier__,
+    :name,
+    :impl,
+    :module,
+    :run,
+    :shortdoc,
+    :longdoc,
+    :example,
+    options: [],
+    __spark_metadata__: nil
+  ]
 
   @command_schema Mandate.Schema.merge([:shortdoc, :longdoc, :example],
                     name: [type: :atom, required: true],
@@ -38,7 +49,7 @@ defmodule Mandate.Dsl.Command do
       # recursive_as: :commands,
       no_depend_modules: [:impl],
       identifier: :name,
-      target: Command,
+      target: Mandate.Dsl.Command,
       describe: "Defines a CLI command",
       schema: @command_schema,
       entities: [
