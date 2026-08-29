@@ -117,12 +117,7 @@ defmodule Mix.Tasks.Mandate.Gen.MixTask do
     type =
       case Enum.find(parts, &(&1 in ~w(boolean string integer float atom count))) do
         nil -> :boolean
-        "boolean" -> :boolean
-        "string" -> :string
-        "integer" -> :integer
-        "float" -> :float
-        "atom" -> :atom
-        "count" -> :count
+        t -> String.to_existing_atom(t)
       end
 
     # Parse short (single letter alias)

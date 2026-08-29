@@ -36,7 +36,7 @@ defmodule Mandate.CommandRouterTest do
 
   test "defines commands entity in router" do
     commands = Spark.Dsl.Extension.get_entities(AppRouter, [:commands])
-    assert length(commands) == 2
+    assert [_, _] = commands
 
     sub_cmd = Enum.find(commands, &(&1.name == :sub))
     assert match?({Mandate.CommandRouterTest.SubCommand, _opts}, sub_cmd.impl)
@@ -48,7 +48,7 @@ defmodule Mandate.CommandRouterTest do
   test "main/1 can be called on router module" do
     result = AppRouter.main([])
     assert is_list(result)
-    assert length(result) == 2
+    assert [_, _] = result
   end
 
   test "subcommand module has mod section entities" do
