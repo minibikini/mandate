@@ -37,10 +37,10 @@ defmodule Mandate.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:reach, "~> 2.0", only: [:dev, :test], runtime: false},
+      {:reach, "~> 2.8", only: [:dev, :test], runtime: false},
       {:ex_dna, "~> 1.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.37", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.40", only: :dev, runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_slop, "~> 0.4", only: [:dev, :test], runtime: false},
       {:vibe_kit, "~> 0.1", only: [:dev, :test], runtime: false},
