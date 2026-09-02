@@ -4,23 +4,23 @@ defmodule Mandate.OptionParser do
   alias Mandate.Dsl.Argument
   alias Mandate.Dsl.Switch
 
-  def parse(argv, root) do
-    parsed_argv = parse_argv(argv, root)
+  def parse(argv, command) do
+    parsed_argv = parse_argv(argv, command)
 
-    with {:ok, pos_args} <- parse_positional_args(root, parsed_argv),
-         {:ok, switches} <- parse_switches(parsed_argv, root),
-         {:ok, switches} <- set_switch_defaults(switches, root) do
+    with {:ok, pos_args} <- parse_positional_args(command, parsed_argv),
+         {:ok, switches} <- parse_switches(parsed_argv, command),
+         {:ok, switches} <- set_switch_defaults(switches, command) do
       {:ok, Map.merge(pos_args, Map.new(switches))}
     end
   end
 
-  def parse_argv(argv, root) do
-    OptionParser.parse(argv, section_to_parse_opts(root))
+  def parse_argv(argv, command) do
+    OptionParser.parse(argv, section_to_parse_opts(command))
   end
 
-  def set_switch_defaults(switches, root) do
+  def set_switch_defaults(switches, command) do
     clean_switches = Keyword.reject(switches, fn {_key, value} -> is_nil(value) end)
-    schemas = switch_schemas(root)
+    schemas = switch_schemas(command)
 
     switches_with_defaults =
       Enum.reduce(schemas, clean_switches, fn schema, acc ->
@@ -47,10 +47,10 @@ defmodule Mandate.OptionParser do
   defp maybe_wrap_value(%{keep: true}, value), do: List.wrap(value)
   defp maybe_wrap_value(_schema, value), do: value
 
-  def parse_switches({switches, _pos_args, []}, root),
-    do: {:ok, root |> switch_schemas() |> Enum.map(&parse_switch(&1, switches))}
+  def parse_switches({switches, _pos_args, []}, command),
+    do: {:ok, command |> switch_schemas() |> Enum.map(&parse_switch(&1, switches))}
 
-  def parse_switches({_switches, _pos_args, invalid}, _root) do
+  def parse_switches({_switches, _pos_args, invalid}, _command) do
     invalid = Enum.map(invalid, fn {flag, _} -> flag end)
 
     {:error, "Invalid options: #{inspect(invalid)}"}
@@ -58,8 +58,8 @@ defmodule Mandate.OptionParser do
 
   @spec parse_positional_args(list(), {term(), list(), term()}) ::
           {:ok, map()} | {:error, String.t()}
-  def parse_positional_args(root, {_, pos_args, _}) do
-    pos_args_schema = Enum.filter(root, &is_struct(&1, Argument))
+  def parse_positional_args(command, {_, pos_args, _}) do
+    pos_args_schema = Enum.filter(command, &is_struct(&1, Argument))
     pos_args_schema_required = Enum.filter(pos_args_schema, & &1.required)
 
     pos_args_len = length(pos_args)
@@ -111,12 +111,12 @@ defmodule Mandate.OptionParser do
   defp validate_pos_args_len(pos_args_len, max),
     do: {:error, "Too many arguments. Expected maximum #{max} but got #{pos_args_len}."}
 
-  defp switch_schemas(root) do
-    Enum.filter(root, &is_struct(&1, Switch))
+  defp switch_schemas(command) do
+    Enum.filter(command, &is_struct(&1, Switch))
   end
 
-  def section_to_parse_opts(root) do
-    root
+  def section_to_parse_opts(command) do
+    command
     |> switch_schemas()
     |> Enum.reduce([aliases: [], strict: []], &switch_to_parse_opts/2)
   end

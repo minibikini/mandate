@@ -1,5 +1,5 @@
 defmodule Mix.Tasks.Mandate.Gen.IgniterTask do
-  use Mandate, as: :igniter_task
+  use Mandate.Task, as: :igniter
 
   shortdoc "Generates a new igniter task"
   example "mix mandate.gen.igniter_task my_app.install --no-optional"
@@ -77,8 +77,11 @@ defmodule Mix.Tasks.Mandate.Gen.IgniterTask do
     doc "Whether or not the task is a private task. This means it has no shortdoc or moduledoc."
   end
 
-  run fn igniter, options ->
-    task_name = options[:task_name]
+  run fn igniter ->
+    positional = igniter.args.positional
+    options = igniter.args.options
+
+    task_name = positional[:task_name]
 
     options =
       if options[:upgrade] do
@@ -125,7 +128,7 @@ defmodule Mix.Tasks.Mandate.Gen.IgniterTask do
 
     """
     defmodule #{inspect(module_name)} do
-      use Mandate, as: :igniter_task
+      use Mandate.Task, as: :igniter
 
       example "mix #{task_name} --example arg"
 
@@ -163,7 +166,7 @@ defmodule Mix.Tasks.Mandate.Gen.IgniterTask do
     """
     if Code.ensure_loaded?(Igniter) do
       defmodule #{inspect(module_name)} do
-        use Mandate, as: :igniter_task
+        use Mandate.Task, as: :igniter
 
         @impl Igniter.Mix.Task
         def info(_argv, _composing_task) do

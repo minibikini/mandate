@@ -1,6 +1,16 @@
 defmodule Mandate.Dsl.Switch do
   @moduledoc false
-  defstruct [:__identifier__, :name, :type, :required, :default, :short, :keep, :doc]
+  defstruct [
+    :__identifier__,
+    :name,
+    :type,
+    :required,
+    :default,
+    :short,
+    :keep,
+    :doc,
+    __spark_metadata__: nil
+  ]
 
   @doc false
   def __entity__,

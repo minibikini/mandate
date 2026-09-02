@@ -1,6 +1,6 @@
 defmodule Mandate.OptionParserExtendedTest do
   use ExUnit.Case, async: true
-  
+
   alias Mandate.Dsl.Argument
   alias Mandate.Dsl.Switch
 
@@ -10,10 +10,11 @@ defmodule Mandate.OptionParserExtendedTest do
       assert Mandate.OptionParser.parse(["hello world"], root) == {:ok, %{phrase: "hello world"}}
     end
   end
-  
+
   describe "complex type combinations" do
     test "handles atom conversion failures gracefully" do
       root = [%Switch{name: :role, type: :atom}]
+
       assert_raise ArgumentError, fn ->
         Mandate.OptionParser.parse(["--role", "non:valid:atom"], root)
       end

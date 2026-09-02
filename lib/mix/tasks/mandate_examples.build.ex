@@ -1,5 +1,5 @@
 defmodule Mix.Tasks.MandateExamples.Build do
-  use Mandate, as: :igniter_task
+  use Mandate.Task, as: :igniter
 
   argument :target do
     required false

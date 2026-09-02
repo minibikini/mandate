@@ -1,46 +1,37 @@
 defmodule Mandate.Dsl do
   @moduledoc false
-  @root %Spark.Dsl.Section{
-    name: :root,
-    describe: "The root section",
-    top_level?: true,
-    schema: [
-      run: [
-        # type: {:one_of, [{:fun, 1}, {:fun, 2}]},
-        type: {:fun, 2},
-        required: true,
-        doc: """
-        The function that will be called when the command/task is run. The function should accept a single argument, a keyword list of the parsed arguments and switches.
 
-        Igniter tasks also accept a second argument, the Igniter context.
-        """,
-        snippet: """
-        fn args ->
-
+  @commands %Spark.Dsl.Section{
+    name: :commands,
+    describe: """
+    A collection of commands
+    """,
+    examples: [
+      """
+      commands do
+        command :main MyAppCli.Tweet
+        command :hello do
+          run fn _args ->
+            IO.puts "Hello, World!"
+          end
         end
-        """
-      ],
-      shortdoc: [
-        type: :string,
-        doc: "One line description"
-      ],
-      longdoc: [
-        type: :string,
-        doc: "Multi-line description"
-      ],
-      example: [
-        type: :string,
-        doc: "Task usage example"
-      ]
+      end
+      """
     ],
     entities: [
-      Mandate.Dsl.Argument.__entity__(),
-      Mandate.Dsl.Switch.__entity__()
+      Mandate.Dsl.Command.__entity__()
+    ],
+    schema: [
+      default: [
+        type: :atom,
+        default: :main,
+        doc: "The default manufacturer"
+      ]
     ]
   }
 
   use Spark.Dsl.Extension,
-    sections: [@root],
+    sections: [@commands],
     transformers: [Mandate.Transformers.AddDocAttributes],
     verifiers: [Spark.Dsl.Verifiers.VerifyEntityUniqueness]
 end

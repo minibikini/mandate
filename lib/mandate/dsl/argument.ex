@@ -1,6 +1,6 @@
 defmodule Mandate.Dsl.Argument do
   @moduledoc false
-  defstruct [:__identifier__, :name, :type, :required, :doc]
+  defstruct [:__identifier__, :name, :type, :required, :doc, __spark_metadata__: nil]
   @doc false
   def __entity__,
     do: %Spark.Dsl.Entity{

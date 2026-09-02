@@ -4,8 +4,8 @@ defmodule Mandate.Transformers.AddDocAttributes do
   alias Spark.Dsl.Transformer
 
   def transform(dsl_state) do
-    longdoc = Transformer.get_option(dsl_state, [:root], :longdoc, false)
-    shortdoc = Transformer.get_option(dsl_state, [:root], :shortdoc, false)
+    longdoc = Transformer.get_option(dsl_state, [:task], :longdoc, false)
+    shortdoc = Transformer.get_option(dsl_state, [:task], :shortdoc, false)
 
     dsl_state =
       %{moduledoc: {1, longdoc}, shortdoc: shortdoc}

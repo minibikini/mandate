@@ -1,5 +1,5 @@
 defmodule Mix.Tasks.MandateExamples.Calc do
-  use Mandate, as: :mix_task
+  use Mandate.Task, as: :mix
 
   # shortdoc "Generates a new Mix Task"
   # longdoc "Generates a new Mix Task, accepts arguments"
