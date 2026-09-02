@@ -1,4 +1,5 @@
 defmodule Mandate.Schema do
+  @moduledoc false
   @schema [
     run: [
       type: {:or, [{:mfa_or_fun, 1}, {:mfa_or_fun, 2}]},

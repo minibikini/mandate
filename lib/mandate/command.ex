@@ -1,5 +1,34 @@
 defmodule Mandate.Command do
+  @moduledoc """
+  DSL for defining standalone CLI subcommands.
+
+  ## Example
+
+  ```elixir
+  defmodule MyApp.Cli.Deploy do
+    use Mandate.Command
+
+    shortdoc "Deploys application to a target environment"
+
+    argument :target, :string do
+      required true
+      doc "Deployment environment (e.g. staging, prod)"
+    end
+
+    switch :replicas, :integer do
+      short :r
+      default 1
+    end
+
+    run fn args ->
+      "Deploying \#{args.replicas} replicas to \#{args.target}"
+    end
+  end
+  ```
+  """
+
   defmodule Dsl do
+    @moduledoc false
     @mod %Spark.Dsl.Section{
       name: :mod,
       describe: "Command's root section",
@@ -18,6 +47,7 @@ defmodule Mandate.Command do
   end
 
   defmodule Info do
+    @moduledoc false
     use Spark.InfoGenerator, extension: Dsl, sections: [:mod]
   end
 

@@ -1,4 +1,48 @@
 defmodule Mandate.Task do
+  @moduledoc """
+  DSL for defining standard Mix and Igniter tasks.
+
+  ## Examples
+
+  ### Mix Task
+
+  ```elixir
+  defmodule Mix.Tasks.MyApp.Greet do
+    use Mandate.Task, as: :mix
+
+    shortdoc "Greets a person"
+
+    argument :name, :string do
+      required true
+    end
+
+    switch :verbose, :boolean
+
+    run fn args ->
+      Mix.shell().info("Hello, \#{args.name}!")
+    end
+  end
+  ```
+
+  ### Igniter Task
+
+  ```elixir
+  defmodule Mix.Tasks.MyApp.Install do
+    use Mandate.Task, as: :igniter
+
+    shortdoc "Installs extension"
+
+    argument :pkg, :string do
+      required true
+    end
+
+    run fn igniter ->
+      igniter
+    end
+  end
+  ```
+  """
+
   use Spark.Dsl,
     default_extensions: [
       extensions: [Mandate.TaskDsl]

@@ -7,7 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Make positional arguments optional by default
+### Added
+
+- **CLI Command Router (`Mandate`)**: Declarative router DSL with `commands` block, subcommand registration, default command fallback, and runtime dispatching via `Mandate.dispatch/2`.
+- **Subcommand DSL (`Mandate.Command`)**: Standalone command modules with declarative arguments, switches, doc attributes, and `run` execution blocks.
+- **Task DSL (`Mandate.Task`)**: Dedicated module for creating Mix tasks (`use Mandate.Task, as: :mix`) and Igniter tasks (`use Mandate.Task, as: :igniter`).
+- **Quality Tooling**: Integrated Credo, ExSlop, VibeKit, Reach, and ExDNA with a preconfigured `mix ci` suite.
+- Comprehensive test coverage for command routing, fallback resolution, and option parsing.
+
+### Changed
+
+- Updated dependencies: `spark ~> 2.7`, `igniter ~> 0.8`, `ex_doc ~> 0.40`, `reach ~> 2.8`.
+- Deprecated legacy `use Mandate, as: :mix_task` / `use Mandate, as: :igniter_task` in favor of `use Mandate.Task`.
+- Make positional arguments optional by default.
 
 ## [0.3.0] - 2025-03-03
 

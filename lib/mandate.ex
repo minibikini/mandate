@@ -1,6 +1,34 @@
 defmodule Mandate do
   @moduledoc """
-  CLI command router framework built with Spark.
+  A declarative framework for building CLI command routers.
+
+  Use `Mandate` in your application's entry module to define commands and dispatch
+  command-line arguments:
+
+  ```elixir
+  defmodule MyApp.Cli do
+    use Mandate
+
+    commands default: :greet do
+      command :greet do
+        shortdoc "Greets a person"
+
+        argument :name, :string do
+          required true
+        end
+
+        switch :shout, :boolean
+
+        run fn args ->
+          greeting = "Hello, \#{args.name}"
+          if args[:shout], do: String.upcase(greeting), else: greeting
+        end
+      end
+
+      command :deploy, MyApp.Cli.Deploy
+    end
+  end
+  ```
   """
 
   use Spark.Dsl,
